@@ -25,6 +25,7 @@ function searchMeal(e) {
 
                 if (data.meals === null) {
                     resultHeading.innerHTML = `<p>There are no search results. Please try another search term</p>`;
+                    mealsElement.innerHTML = '';
                 } else {
                     mealsElement.innerHTML = data.meals.map(meal =>
                         `<div class="meal">
@@ -81,10 +82,25 @@ function addMealToDOM(meal) {
             </ul>
         </div>
     </div>`;
+    singleMealElement.scrollIntoView(true);
+}
+
+function getRandomMeal() {
+    // Clear meals and heading
+    mealsElement.innerHTML = '';
+    resultHeading.innerHTML = '';
+
+    fetch(`https://www.themealdb.com/api/json/v1/1/random.php`)
+        .then(res => res.json())
+        .then(data => {
+            const meal = data.meals[0];
+            addMealToDOM(meal);
+        });
 }
 
 // Event listeners
 submit.addEventListener('submit', searchMeal);
+random.addEventListener('click', getRandomMeal);
 mealsElement.addEventListener('click', e => {
     const mealInfo = e.path.find(item => {
         if (item.classList) {
